@@ -45,7 +45,7 @@ func main() {
 	root := &cobra.Command{
 		Use:     "img2a <path>",
 		Short:   "A tool that converts images to ASCII art",
-		Version: "1.0.0",
+		Version: "1.0.2",
 		Args:    cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
@@ -76,5 +76,7 @@ func main() {
 	root.Flags().IntP("width", "w", 150, "width of ASCII art output")
 	root.Flags().SortFlags = false
 
-	root.Execute()
+	if err := root.Execute(); err != nil {
+		panic(err)
+	}
 }
