@@ -4,7 +4,7 @@ A tool that converts images to ASCII art
 ## Installation
 
 ```go
-go install github.com/unemil/img2a
+go install github.com/unemil/img2a@latest
 ```
 
 ## Usage
