@@ -44,8 +44,8 @@ func imageToAscii(image image.Image, width int) (ascii string) {
 func main() {
 	root := &cobra.Command{
 		Use:     "img2a <path>",
-		Short:   "A tool that converts images to ASCII art",
-		Version: "1.0.2",
+		Short:   "A command-line tool that converts an image to ASCII art",
+		Version: "1.0.3",
 		Args:    cobra.MinimumNArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
