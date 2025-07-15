@@ -45,11 +45,12 @@ func main() {
 	root := &cobra.Command{
 		Use:     "img2a <path>",
 		Short:   "A command-line tool that converts an image to ASCII art",
-		Version: "1.0.3",
+		Version: "1.0.4",
 		Args:    cobra.MinimumNArgs(0),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				return cmd.Help()
+				_ = cmd.Help()
+				return
 			}
 
 			path := args[0]
@@ -57,26 +58,24 @@ func main() {
 
 			file, err := os.Open(path)
 			if err != nil {
-				return err
+				fmt.Fprintln(os.Stderr, err)
+				return
 			}
 			defer file.Close()
 
 			image, _, err := image.Decode(file)
 			if err != nil {
-				return err
+				fmt.Fprintln(os.Stderr, err)
+				return
 			}
 
 			ascii := imageToAscii(image, width)
-			fmt.Print(ascii)
-
-			return nil
+			fmt.Fprint(os.Stdout, ascii)
 		},
 	}
 
 	root.Flags().IntP("width", "w", 150, "width of ASCII art output")
 	root.Flags().SortFlags = false
 
-	if err := root.Execute(); err != nil {
-		panic(err)
-	}
+	_ = root.Execute()
 }
