@@ -18,6 +18,6 @@ img2a --help
 
 ## Example
 
-> img2a Meisje_met_de_parel.jpg
+> img2a meisje_met_de_parel.jpg
 
 <img width="1728" height="1080" alt="Meisje met de parel" src="https://github.com/user-attachments/assets/10a12474-e70e-4032-b0b4-f2bf67252372" />
