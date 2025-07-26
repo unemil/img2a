@@ -13,7 +13,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const ansiOverhead = 25
+const (
+	ansiOverhead = 25
+
+	defaultWidth int     = 150
+	defaultRatio float64 = 2.3
+)
 
 var charset = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`\\'. "
 
@@ -59,12 +64,15 @@ func areaSampling(image image.Image, startX, startY, endX, endY int) (r, g, b ui
 		totalB / uint32(count)
 }
 
-func imageToAscii(image image.Image, width int) string {
+func imageToAscii(image image.Image, width int, ratio float64) string {
 	bounds := image.Bounds()
 	if width <= 0 {
-		width = 150
+		width = defaultWidth
 	}
-	height := int(float64(width) * (float64(bounds.Dy()) / float64(bounds.Dx())) / 2.3)
+	if ratio <= 0 {
+		ratio = defaultRatio
+	}
+	height := int(float64(width) * (float64(bounds.Dy()) / float64(bounds.Dx())) / ratio)
 
 	var ascii strings.Builder
 	ascii.Grow(width * height * ansiOverhead)
@@ -95,7 +103,7 @@ func main() {
 	root := &cobra.Command{
 		Use:     "img2a <path>",
 		Short:   "A command-line tool that converts an image to ASCII art",
-		Version: "1.0.5",
+		Version: "1.0.6",
 		Args:    cobra.MinimumNArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
@@ -105,6 +113,7 @@ func main() {
 
 			path := args[0]
 			width, _ := cmd.Flags().GetInt("width")
+			ratio, _ := cmd.Flags().GetFloat64("ratio")
 
 			file, err := os.Open(path)
 			if err != nil {
@@ -119,12 +128,13 @@ func main() {
 				return
 			}
 
-			ascii := imageToAscii(image, width)
+			ascii := imageToAscii(image, width, ratio)
 			fmt.Fprint(os.Stdout, ascii)
 		},
 	}
 
-	root.Flags().IntP("width", "w", 150, "width of ASCII art output")
+	root.Flags().IntP("width", "w", defaultWidth, "width of ASCII art output")
+	root.Flags().Float64P("ratio", "r", defaultRatio, "aspect ratio of ASCII art character")
 	root.Flags().SortFlags = false
 
 	_ = root.Execute()
