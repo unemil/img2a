@@ -64,7 +64,7 @@ func imageToAscii(image image.Image, width int) string {
 	if width <= 0 {
 		width = 150
 	}
-	height := int(float64(width) * (float64(bounds.Dy()) / float64(bounds.Dx())) * .5)
+	height := int(float64(width) * (float64(bounds.Dy()) / float64(bounds.Dx())) / 2.3)
 
 	var ascii strings.Builder
 	ascii.Grow(width * height * ansiOverhead)
